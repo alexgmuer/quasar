@@ -1,0 +1,19 @@
+name: Bazel Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Install Bazelisk
+      uses: bazelbuild/setup-bazelisk@v2
+
+    - name: Build all targets
+      run: bazel build
