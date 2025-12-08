@@ -35,3 +35,25 @@ All components should be able to be containerized, so I can also experiment with
 
 ## Node Agent
 - High performance and low footprint
+
+
+# Development
+## Building and Running
+I chose to use [Bazel build system](https://bazel.build) for this project, as a fun learning exercise. In order to build all targets, one simply has to run (from the base directory):
+```bash
+bazel build
+```
+
+To build a specific target, use the following syntax:
+```bash
+bazel build //<path to BUILD file with target>:<name of target>
+```
+
+For example, to build the cluster controller executable:
+```bash
+bazel build //cluster_controller/app:cluster_controller
+```
+And following with the example, to run it:
+```bash
+bazel run //cluster_controller/app:cluster_controller
+```
