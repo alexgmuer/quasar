@@ -1,0 +1,136 @@
+syntax = "proto3";
+
+package scheduler.v1;
+
+option go_package = "scheduler/api/v1;schedulerv1";
+option java_multiple_files = true;
+option java_package = "com.scheduler.v1";
+
+// =========================
+// Core enums
+// =========================
+
+enum JobState {
+  JOB_STATE_UNSPECIFIED = 0;
+  JOB_STATE_PENDING     = 1;
+  JOB_STATE_RUNNING     = 2;
+  JOB_STATE_COMPLETED   = 3;
+  JOB_STATE_FAILED      = 4;
+  JOB_STATE_CANCELED    = 5;
+}
+
+// =========================
+// Resource specification
+// =========================
+
+message ResourceRequest {
+  uint32 cpu_cores   = 1;
+  uint64 memory_mb   = 2;
+  uint32 gpus        = 3;
+}
+
+// =========================
+// Job specification
+// =========================
+
+message JobSpec {
+  string command                 = 1;
+  repeated string args           = 2;
+  map<string, string> env        = 3;
+  string working_directory       = 4;
+
+  ResourceRequest resources      = 5;
+
+  // Optional metadata
+  string queue                   = 6;
+  uint32 priority                = 7;
+  uint64 time_limit_seconds      = 8;
+}
+
+// =========================
+// Job representation
+// =========================
+
+message Job {
+  string job_id                   = 1;
+  JobSpec spec                    = 2;
+
+  JobState state                  = 3;
+
+  string assigned_node            = 4;
+  int32 exit_code                 = 5;
+
+  uint64 submit_time_unix_ms      = 6;
+  uint64 start_time_unix_ms       = 7;
+  uint64 end_time_unix_ms         = 8;
+}
+
+// =========================
+// Requests / Responses
+// =========================
+
+message SubmitJobRequest {
+  JobSpec spec = 1;
+}
+
+message SubmitJobResponse {
+  string job_id = 1;
+}
+
+message GetJobRequest {
+  string job_id = 1;
+}
+
+message GetJobResponse {
+  Job job = 1;
+}
+
+message ListJobsRequest {
+  JobState state_filter = 1; // Optional: JOB_STATE_UNSPECIFIED = no filter
+}
+
+message ListJobsResponse {
+  repeated Job jobs = 1;
+}
+
+message CancelJobRequest {
+  string job_id = 1;
+}
+
+message CancelJobResponse {
+  bool canceled = 1;
+}
+
+// =========================
+// Streaming (logs & events)
+// =========================
+
+message JobLogRequest {
+  string job_id = 1;
+  bool follow   = 2; // true = tail / stream
+}
+
+message JobLogChunk {
+  bytes data = 1;
+}
+
+// =========================
+// Scheduler service
+// =========================
+
+service SchedulerService {
+  // Submit a new job
+  rpc SubmitJob(SubmitJobRequest) returns (SubmitJobResponse);
+
+  // Query a single job
+  rpc GetJob(GetJobRequest) returns (GetJobResponse);
+
+  // List jobs (optionally filtered)
+  rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+
+  // Cancel a job
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+
+  // Stream job logs
+  rpc StreamJobLogs(JobLogRequest) returns (stream JobLogChunk);
+}
