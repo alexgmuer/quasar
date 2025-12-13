@@ -1,2 +1,3 @@
+.cache
 bazel-*
 MODULE.bazel.lock
