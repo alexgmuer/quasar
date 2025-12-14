@@ -16,4 +16,4 @@ jobs:
       with:
         path: "~/.cache/bazel"
         key: bazel
-    - run: bazel build //...
+    - run: bazel build //cluster_controller/app:cluster_controller && bazel build //python_client:client
