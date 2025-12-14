@@ -7,5 +7,6 @@ py_binary(
     srcs = ["client.py"],
     deps = [
         "//rpc_interfaces:cluster_controller_py_grpc",
+        "//rpc_interfaces:cluster_controller_py_proto",
     ],
 )

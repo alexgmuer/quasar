@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import grpc
-import cluster_controller_api_pb2 as pb2
-import cluster_controller_api_pb2_grpc as pb2_grpc
+import rpc_interfaces.cluster_controller_api_pb2 as pb2
+import rpc_interfaces.cluster_controller_api_pb2_grpc as pb2_grpc
 
 def run():
     # Create a channel to the server
