@@ -21,9 +21,9 @@ def run():
         print(f"Submitted job with ID: {response.job_id}")
 
         # Example: Get the job
-        get_request = pb2.GetJobRequest(job_id=response.job_id)
-        get_response = stub.GetJob(get_request)
-        print(f"Job state: {get_response.job.state}")
+        #get_request = pb2.GetJobRequest(job_id=response.job_id)
+        #get_response = stub.GetJob(get_request)
+        #print(f"Job state: {get_response.job.state}")
 
 if __name__ == '__main__':
     run()

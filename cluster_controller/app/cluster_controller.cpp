@@ -5,14 +5,19 @@
 #include "grpc/grpc.h"
 #include "grpcpp/server_builder.h"
 
-#include "rpc_interfaces/cluster_controller_api.pb.h"
-#include "rpc_interfaces/cluster_controller_api.grpc.pb.h"
+#include "cluster_controller/lib/engine.hpp"
 
 int main() {
-    scheduler::v1::JobSpec job;
-    job.set_command("echo");
-    job.add_args("hello");
+    std::print("--CLUSTER SCHEDULER INITIALIZATION---\n");
 
-    std::print("Command: {}\n", job.command());
+    SchedulerServiceImpl service;
+    std::string server_addr("0.0.0.0:50051");
+
+    grpc::ServerBuilder builder;
+    builder.AddListeningPort(server_addr, grpc::InsecureServerCredentials());
+    builder.RegisterService(&service);
+    std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
+    std::print("Server listening on {}...\n", server_addr);
+    server->Wait();
     return 0;
 }
