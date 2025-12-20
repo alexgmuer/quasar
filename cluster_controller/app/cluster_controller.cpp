@@ -10,7 +10,8 @@
 int main() {
     std::print("--CLUSTER SCHEDULER INITIALIZATION---\n");
 
-    SchedulerServiceImpl service;
+    JobStore job_store;
+    SchedulerServiceImpl service(job_store);
     std::string server_addr("0.0.0.0:50051");
 
     grpc::ServerBuilder builder;
