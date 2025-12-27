@@ -1,4 +1,5 @@
 # About
+# NOTE: This project has migrated to gitlab [here](https://gitlab.com/alexgmuer/quasar) and this github repo is no longer maintained.
 This is a repo containing the various components of a workload scheduler.
 
 # High Level Architecture
